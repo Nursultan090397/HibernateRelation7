@@ -1,4 +1,4 @@
-package peaksoft.model;
+package peaksoft.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,7 +28,8 @@ public class Instructor {
     @Column
     private String phoneNumber;
     @ManyToMany(cascade = {DETACH,MERGE,REFRESH,PERSIST},fetch = FetchType.LAZY)
-    @JoinTable(name = "instructor_course", joinColumns = @JoinColumn(name = "instructor_id"),
+    @JoinTable(name = "instructor_course",
+            joinColumns = @JoinColumn(name = "instructor_id",referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "course_id"))
     private List<Course> courses = new ArrayList<>();
 
@@ -42,11 +43,11 @@ public class Instructor {
     @Override
     public String toString() {
         return "Instructor{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
+                "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 }
+

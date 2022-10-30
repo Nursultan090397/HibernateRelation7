@@ -1,7 +1,12 @@
-package peaksoft.model;
+package peaksoft.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.*;
 
 @Getter
 @Setter
@@ -12,27 +17,36 @@ public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column
     private String lessonName;
+    @Column
     private String videoLink;
-    //private Course courseId;
 
-    public Lesson(String lessonName, String videoLink, Course course) {
+    @OneToMany (cascade = CascadeType.ALL)
+
+    private List<Task> tasks = new ArrayList<>();
+
+    @ManyToOne (cascade = {DETACH,MERGE,REFRESH,PERSIST},fetch = FetchType.LAZY)
+    @JoinColumn (name = "course_id")
+    private Course course;
+
+    public Lesson(String lessonName, String videoLink, Long course_id) {
         this.lessonName = lessonName;
         this.videoLink = videoLink;
-        //this.course = course;
+        this.id = course_id;
+
     }
 
     @Override
     public String toString() {
         return "Lesson{" +
-                "id=" + id +
-                ", lessonName='" + lessonName + '\'' +
+                "lessonName='" + lessonName + '\'' +
                 ", videoLink='" + videoLink + '\'' +
-                //", course=" + course +
                 '}';
     }
 }
+
+
 
 
 

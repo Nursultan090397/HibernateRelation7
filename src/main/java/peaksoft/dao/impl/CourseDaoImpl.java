@@ -1,92 +1,77 @@
-package peaksoft.dao;
+package peaksoft.dao.impl;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import peaksoft.dao.CourseDao;
 import peaksoft.entity.Course;
-import peaksoft.service.CourseService;
 import peaksoft.util.Util;
 
 import java.util.List;
 
-public class CourseDaoImpl implements CourseService {
-    private final SessionFactory sessionFactory = Util.createsessionFactory();
+public class CourseDaoImpl implements CourseDao {
 
+    private final SessionFactory sessionFactory = Util.createsessionFactory();
     @Override
     public void saveCourse(Course course) {
-        try
-                (Session session = sessionFactory.openSession()){
-                session.beginTransaction();
-                session.save (course);
-                session.getTransaction().commit();
-            }
-
+        Session session=Util.createsessionFactory().openSession();
+        session.beginTransaction();
+        session.persist(course);
+        session.getTransaction().commit();
+        System.out.println("course save successfully");
+        session.close();
     }
-
-
     @Override
     public Course getCourseById(Long id) {
-        try (Session session = sessionFactory.openSession()){
-            session.beginTransaction();
-            Course course = session.get(Course.class, id);
-            session.getTransaction().commit();
-            return course;
-        }
-
+        Session session = Util.createsessionFactory().openSession();
+        session.beginTransaction();
+        Course course = session.find(Course.class,id);
+        session.getTransaction().commit();
+        System.out.println("Course find by id successfully!");
+        session.close();
+        return course;
     }
-
     @Override
     public List<Course> getAllCourse() {
-        try (Session session = sessionFactory.openSession()){
-            session.beginTransaction();
-            List < Course> courses = session.createQuery("select u from Course u").getResultList();
-            session.getTransaction().commit();
-            return courses;
-        }
-
+        Session session = Util.createsessionFactory().openSession();
+        session.getTransaction().begin();
+        List<Course> course = session.createQuery("Select c from Course c ORDER BY c.imageLink",Course.class)
+                .getResultList();
+        session.getTransaction().commit();
+        session.close();
+        return course;
     }
-
     @Override
-    public void updateCourse(Long id, Course course) {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            Course course1 = session.get(Course.class, id);
-
-            course1.setCourseName(course.getCourseName());
-            course1.setImageLink(course.getImageLink());
-            course1.setDescription(course.getDescription());
-            course1.setDuration(course.getDuration());
-            course1.setCreateAt(course.getCreateAt());
-
-            session.saveOrUpdate(course1);
-            session.getTransaction().commit();
-
-
-        }
+    public void UpdateCourse(Long id, Course course) {
+        Session session = Util.createsessionFactory().openSession();
+        session.getTransaction().begin();
+        Course courses = session.find(Course.class,id);
+        courses.setCourseName(course.getDescription());
+        courses.setDescription(course.getDescription());
+        courses.setImageLink(course.getImageLink());
+        courses.setDuration(course.getDuration());
+        courses.setImageLink(course.getImageLink());
+        session.getTransaction().commit();
+        session.close();
     }
-
     @Override
     public void deleteCourseById(Long id) {
-        try (Session session = sessionFactory.openSession()){
-            session.beginTransaction();
-            Course course2 = session.get(Course.class,id);
-            session.remove(course2);
-            session.getTransaction().commit();
-        }
-
+        Session session = Util.createsessionFactory().openSession();
+        session.getTransaction().begin();
+        Course course = session.find(Course.class,id);
+        session.delete(course);
+        session.getTransaction().commit();
+        System.out.println("idealno  ' _ ' ");
     }
-
     @Override
-    public Course getCourseByName(String name) {
-        try (Session session = sessionFactory.openSession()){
-            session.beginTransaction();
-            List <Course> course3 = session.createQuery("select u  from Course u").getResultList();
-            for (Course course : course3){
-                if (course.getCourseName().equals(name)){
-                    return course;
-                }
-            }
-            session.getTransaction().commit();
-        }
+    public Course  getCourseByName(String name) {
+        Session session = Util.createsessionFactory().openSession();
+        session.getTransaction().begin();
+        List<Course> courses = session.createQuery("select c from Course c", Course.class).list();
+        session.getTransaction().commit();
+        session.close();
         return null;
     }
+
+
 }
+

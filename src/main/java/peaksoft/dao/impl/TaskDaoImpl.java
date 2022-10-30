@@ -1,12 +1,12 @@
-package peaksoft.dao;
+package peaksoft.dao.impl;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import peaksoft.dao.TaskDao;
 import peaksoft.entity.Task;
-import peaksoft.service.TaskService;
 import peaksoft.util.Util;
 
-public class TaskDaoImpl implements TaskService {
+public class TaskDaoImpl implements TaskDao {
     private final SessionFactory sessionFactory = Util.createsessionFactory();
 
     @Override
@@ -41,7 +41,7 @@ public class TaskDaoImpl implements TaskService {
     }
 
     @Override
-    public Task getAllTackByLessonId(Long id) {
+    public Task getAllTaskByLessonId(Long id) {
         Session session = Util.createsessionFactory().openSession();
         session.beginTransaction();
         Task task = session.find(Task.class,id);

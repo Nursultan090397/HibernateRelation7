@@ -1,7 +1,8 @@
-package peaksoft.dao;
+package peaksoft.dao.impl;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import peaksoft.dao.LessonDao;
 import peaksoft.entity.Course;
 import peaksoft.entity.Lesson;
 import peaksoft.service.LessonService;
@@ -9,56 +10,45 @@ import peaksoft.util.Util;
 
 import java.util.List;
 
-public class LessonDaoImpl implements LessonService {
+public class LessonDaoImpl implements LessonDao {
     private final SessionFactory sessionFactory = Util.createsessionFactory();
 
     @Override
-    public void saveLesson(Lesson lesson) {
-        try
-                (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            session.save(lesson);
-            session.getTransaction().commit();
-        }
-
+    public  void SaveLesson(Lesson lesson){
+        Session session = Util.createsessionFactory().openSession();
+        session.beginTransaction();
+        session.persist(lesson);
+        session.getTransaction().commit();
+        session.close();
     }
-
     @Override
-    public void updateLesson(Long id, Lesson lesson) {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            Lesson lesson1 = session.get(Lesson.class, id);
-
-            lesson1.setLessonName(lesson.getLessonName());
-            lesson1.setVideoLink(lesson.getVideoLink());
-
-            session.saveOrUpdate(lesson1);
-            session.getTransaction().commit();
-
-
-        }
+    public void UpdateLesson(Long id, Lesson lesson){
+        Session session = Util.createsessionFactory().openSession();
+        session.beginTransaction();
+        Lesson lesson1 = session.find(Lesson.class,id);
+        lesson1.setLessonName(lesson.getLessonName());
+        lesson1.setVideoLink(lesson.getVideoLink());
+        lesson1.setId(lesson.getId());
+        session.getTransaction().commit();
+        session.close();
     }
-
     @Override
-    public Lesson getLessonById(Long id) {
-        try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-            Lesson lesson = session.get(Lesson.class, id);
-            session.getTransaction().commit();
-            return lesson;
-        }
-
+    public  Lesson getLessonById(Long id){
+        Session session =Util.createsessionFactory().openSession();
+        session.beginTransaction();
+        Lesson lesson = session.find(Lesson.class,id);
+        session.getTransaction().commit();
+        session.close();
+        return lesson;
     }
-
     @Override
-    public List<Lesson> getLessonsByCourseId(Long id) {
-        try (Session session = Util.createsessionFactory().openSession()) {
-            session.beginTransaction();
-            Course course = session.find(Course.class, id);
-            session.getTransaction().commit();
-            return null;
-
-        }
+    public List<Lesson> getLessonsByCourseId(Long id){
+        Session session = Util.createsessionFactory().openSession();
+        session.beginTransaction();
+        Course course = session.find(Course.class,id);
+        session.getTransaction().commit();
+        session.close();
+        return null;
     }
 }
 

@@ -1,4 +1,4 @@
-package peaksoft.model;
+package peaksoft.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,6 +30,9 @@ public class Course {
     @Column
     private String description;
 
+    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.EAGER,mappedBy = "course")
+    private List<Lesson> lessons = new ArrayList<>();
+
     @ManyToMany (cascade = {DETACH,MERGE,REFRESH,PERSIST},fetch = FetchType.LAZY,mappedBy = "courses")
     private List<Instructor> instructors = new ArrayList<>();
 
@@ -44,8 +47,7 @@ public class Course {
     @Override
     public String toString() {
         return "Course{" +
-                "id=" + id +
-                ", courseName='" + courseName + '\'' +
+                "courseName='" + courseName + '\'' +
                 ", duration='" + duration + '\'' +
                 ", createAt=" + createAt +
                 ", imageLink='" + imageLink + '\'' +
@@ -53,6 +55,7 @@ public class Course {
                 '}';
     }
 }
+
 
 
 
