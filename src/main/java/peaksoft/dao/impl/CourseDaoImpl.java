@@ -45,7 +45,7 @@ public class CourseDaoImpl implements CourseDao {
         Session session = Util.createsessionFactory().openSession();
         session.getTransaction().begin();
         Course courses = session.find(Course.class,id);
-        courses.setCourseName(course.getDescription());
+        courses.setCourseName(course.getCourseName());
         courses.setDescription(course.getDescription());
         courses.setImageLink(course.getImageLink());
         courses.setDuration(course.getDuration());
@@ -60,7 +60,7 @@ public class CourseDaoImpl implements CourseDao {
         Course course = session.find(Course.class,id);
         session.delete(course);
         session.getTransaction().commit();
-        System.out.println("idealno  ' _ ' ");
+        System.out.println("perfect  ' _ ' ");
     }
     @Override
     public Course  getCourseByName(String name) {
@@ -68,6 +68,7 @@ public class CourseDaoImpl implements CourseDao {
         session.getTransaction().begin();
         List<Course> courses = session.createQuery("select c from Course c", Course.class).list();
         session.getTransaction().commit();
+        System.out.println("course found");
         session.close();
         return null;
     }

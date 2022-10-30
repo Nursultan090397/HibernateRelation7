@@ -18,7 +18,7 @@ public class Util {
     public static SessionFactory createsessionFactory() {
         Properties properties = new Properties();
         properties.put(Environment.DRIVER, "org.postgresql.Driver");
-        properties.put(Environment.URL, "jdbc:postgresql://localhost:2022/postgres");
+        properties.put(Environment.URL, "jdbc:postgresql://localhost:5432/postgres");
         properties.put(Environment.USER, "postgres");
         properties.put(Environment.PASS, "081262");
         properties.put(Environment.HBM2DDL_AUTO, "update");
